@@ -1,3 +1,5 @@
+package main
+
 import "os/exec"
 import "fmt"
 
