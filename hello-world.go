@@ -11,6 +11,6 @@ func main() {
         fmt.Println(err.Error())
         return
     }
-    fmt.Print("hello world from architecure: ")
+    fmt.Print("hello world from architecture: ")
     fmt.Print(string(stdout))
 }
