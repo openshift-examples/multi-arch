@@ -26,6 +26,11 @@ Writing manifest list to image destination
 Storing list signatures
 ```
 
+Just for information: 
+ * [podman fails to push manifest-lists to quay.io #8242](https://github.com/containers/podman/issues/8242)
+   
+   **Please use `--all` at podman manifest push ...**
+
 
 ## Run
 
