@@ -1,0 +1,4 @@
+ARG WINVER=ltsc2022
+FROM mcr.microsoft.com/windows/servercore:${WINVER}
+
+CMD echo Hello from Windows
