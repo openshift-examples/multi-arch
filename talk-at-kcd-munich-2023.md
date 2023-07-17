@@ -280,3 +280,42 @@ untagged: localhost/manifestlist/v1:latest
 ## Discover via explore.ggcr.dev
 
 <https://explore.ggcr.dev/?repo=quay.io/openshift-examples/multi-arch>
+
+
+## Copy & Muli-Arch image and discover
+
+Deploy a registry, for example:
+  <https://github.com/openshift-examples/simple-container-registry/>
+
+
+Copy image into registry:
+
+```bash
+export REGISTRY=default-registry.apps.cluster-kptrj.kptrj.sandbox275.opentlc.com
+
+skopeo copy --all \
+  docker://quay.io/openshift-examples/multi-arch:kcdmunich2023 \
+  docker://${REGISTRY}/openshift-examples/multi-arch:kcdmunich202
+
+
+```
+
+### Take a look into the registry
+
+`oc rsh -c tools deployment/registry`:
+
+For example, double check the sha256 change
+
+```bash
+sh-4.4# pwd
+/registry/docker/registry/v2/blobs/sha256/94/940034fae708a1fe0ee6ff6929fffd48c235a6da185812ea4b31bab58815b6cf
+sh-4.4# file *
+data: gzip compressed data, original size 26090496
+sh-4.4# cp data foo.gz
+sh-4.4# gzip -d foo.gz
+sh-4.4# sha256sum *
+940034fae708a1fe0ee6ff6929fffd48c235a6da185812ea4b31bab58815b6cf  data
+e54dc53d0edbbc96d3307fdea7bc1ed433d9083a1aab033dc3b38fd8b4fb165a  foo
+sh-4.4#
+```
+
