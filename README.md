@@ -230,7 +230,7 @@ Storing signatures
 [root@centos-amd64 multi-arch]# buildah manifest add manifestlist/v1 quay.io/openshift-examples/multi-arch:kcdmunich2023-x86_64
 74fab59072d748f3a8bdb88d3248d4372f8c21440732038de7b4e88888373b3f: sha256:d3b7a48ede6086835f0b97a82f9baaaa2d566072aec7e209d4341eb29566fafb
 
-[root@centos-amd64 multi-arch]# buildah manifest push manifestlist/v1  docker://quay.io/openshift-examples/multi-arch:kcdmunich2023
+[root@centos-amd64 multi-arch]# buildah manifest push manifestlist/v1 docker://quay.io/openshift-examples/multi-arch:kcdmunich2023
 Getting image list signatures
 Copying 0 of 2 images in list
 Writing manifest list to image destination
