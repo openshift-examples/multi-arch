@@ -1,0 +1,65 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: Start hcloud_instance
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+
+  - name: Create arm-instance
+    hetzner.hcloud.hcloud_server:
+      api_token: "{{ lookup('ansible.builtin.env', 'HCLOUD_MULTI_ARCH_TOKEN') }}"
+      name: arm-instance
+      server_type: cax11
+      image: fedora-38
+      location: fsn1
+      state: present
+      enable_ipv6: false
+      ssh_keys:
+      - rbohne@redhat.com
+    register: output
+
+  - name: Wait 300 seconds for port 22 to become open
+    ansible.builtin.wait_for:
+      port: 22
+      host: '{{ output.hcloud_server.ipv4_address }}'
+      delay: 1
+      timeout: 300
+    connection: local
+
+  - name: Create x86-instance
+    hetzner.hcloud.hcloud_server:
+      api_token: "{{ lookup('ansible.builtin.env', 'HCLOUD_MULTI_ARCH_TOKEN') }}"
+      name: x86-instance
+      server_type: cx11
+      image: fedora-38
+      location: fsn1
+      state: present
+      enable_ipv6: false
+      ssh_keys:
+      - rbohne@redhat.com
+    register: output
+  - name: Wait 300 seconds for port 22 to become open
+    ansible.builtin.wait_for:
+      port: 22
+      host: '{{ output.hcloud_server.ipv4_address }}'
+      delay: 1
+      timeout: 300
+    connection: local
+
+  - name: refresh_inventory
+    ansible.builtin.meta: refresh_inventory
+
+- name: Install packages
+  hosts: hcloud
+  gather_facts: no
+  tasks:
+
+    - name: Install packages
+      ansible.builtin.dnf:
+        name:
+          - podman
+          - skopeo
+          - buildah
+          - jq
+        state: latest

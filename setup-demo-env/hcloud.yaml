@@ -1,0 +1,3 @@
+plugin: hcloud
+token: "{{ lookup('ansible.builtin.env', 'HCLOUD_MULTI_ARCH_TOKEN') }}"
+

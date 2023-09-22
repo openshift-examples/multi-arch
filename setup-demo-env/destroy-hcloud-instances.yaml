@@ -1,0 +1,11 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: Destroy all hcloud_instance
+  hosts: hcloud
+  gather_facts: no
+  tasks:
+  - name: "Destroy {{ name }}"
+    hcloud_server:
+      api_token:  "{{ lookup('ansible.builtin.env', 'HCLOUD_MULTI_ARCH_TOKEN') }}"
+      name: "{{ name }}"
+      state: absent

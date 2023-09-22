@@ -1,0 +1,16 @@
+---
+ansible-navigator:
+  ansible:
+    inventory:
+      entries:
+      - hcloud.yaml
+  execution-environment:
+    environment-variables:
+      pass:
+      - HCLOUD_MULTI_ARCH_TOKEN
+    image: quay.io/rbohne/lab-ee:latest
+  logging:
+    level: info
+  mode: stdout
+  playbook-artifact:
+    enable: false
