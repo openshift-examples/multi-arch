@@ -1,54 +1,75 @@
 #!/usr/bin/env ansible-playbook
 ---
 - name: Start hcloud_instance
-  hosts: localhost
-  connection: local
+  hosts: laptop
   gather_facts: no
   tasks:
+    - name: Create arm-instance
+      delegate_to: localhost
+      hetzner.hcloud.hcloud_server:
+        api_token: "{{ lookup('ansible.builtin.env', 'HCLOUD_MULTI_ARCH_TOKEN') }}"
+        name: arm-instance
+        server_type: cax11
+        image: fedora-38
+        location: fsn1
+        state: present
+        enable_ipv6: false
+        ssh_keys:
+        - rbohne@redhat.com
+      register: output
 
-  - name: Create arm-instance
-    hetzner.hcloud.hcloud_server:
-      api_token: "{{ lookup('ansible.builtin.env', 'HCLOUD_MULTI_ARCH_TOKEN') }}"
-      name: arm-instance
-      server_type: cax11
-      image: fedora-38
-      location: fsn1
-      state: present
-      enable_ipv6: false
-      ssh_keys:
-      - rbohne@redhat.com
-    register: output
+    - name: Update ~/.ssh/config
+      blockinfile:
+        path: ~/.ssh/config
+        marker: "# {mark} - multi-arch arm-instance "
+        block: |
+          Host arm-instance
+            HostName {{ output.hcloud_server.ipv4_address }}
+            User root
 
-  - name: Wait 300 seconds for port 22 to become open
-    ansible.builtin.wait_for:
-      port: 22
-      host: '{{ output.hcloud_server.ipv4_address }}'
-      delay: 1
-      timeout: 300
-    connection: local
+    - name: Wait 300 seconds for port 22 to become open
+      delegate_to: localhost
+      ansible.builtin.wait_for:
+        port: 22
+        host: '{{ output.hcloud_server.ipv4_address }}'
+        delay: 1
+        timeout: 300
+      connection: local
 
-  - name: Create x86-instance
-    hetzner.hcloud.hcloud_server:
-      api_token: "{{ lookup('ansible.builtin.env', 'HCLOUD_MULTI_ARCH_TOKEN') }}"
-      name: x86-instance
-      server_type: cx11
-      image: fedora-38
-      location: fsn1
-      state: present
-      enable_ipv6: false
-      ssh_keys:
-      - rbohne@redhat.com
-    register: output
-  - name: Wait 300 seconds for port 22 to become open
-    ansible.builtin.wait_for:
-      port: 22
-      host: '{{ output.hcloud_server.ipv4_address }}'
-      delay: 1
-      timeout: 300
-    connection: local
+    - name: Create x86-instance
+      delegate_to: localhost
+      hetzner.hcloud.hcloud_server:
+        api_token: "{{ lookup('ansible.builtin.env', 'HCLOUD_MULTI_ARCH_TOKEN') }}"
+        name: x86-instance
+        server_type: cx11
+        image: fedora-38
+        location: fsn1
+        state: present
+        enable_ipv6: false
+        ssh_keys:
+        - rbohne@redhat.com
+      register: output
 
-  - name: refresh_inventory
-    ansible.builtin.meta: refresh_inventory
+    - name: Update ~/.ssh/config
+      blockinfile:
+        path: ~/.ssh/config
+        marker: "# {mark} - multi-arch x86-instance "
+        block: |
+          Host x86-instance
+            HostName {{ output.hcloud_server.ipv4_address }}
+            User root
+
+    - name: Wait 300 seconds for port 22 to become open
+      delegate_to: localhost
+      ansible.builtin.wait_for:
+        port: 22
+        host: '{{ output.hcloud_server.ipv4_address }}'
+        delay: 1
+        timeout: 300
+      connection: local
+
+    - name: refresh_inventory
+      ansible.builtin.meta: refresh_inventory
 
 - name: Install packages
   hosts: hcloud
@@ -62,4 +83,10 @@
           - skopeo
           - buildah
           - jq
+          - git
         state: latest
+
+    - name: Clone demo repo
+      ansible.builtin.git:
+        repo: https://github.com/openshift-examples/multi-arch.git
+        dest: /root/multi-arch

@@ -4,7 +4,10 @@ ansible-navigator:
     inventory:
       entries:
       - hcloud.yaml
+      - hosts.yaml
   execution-environment:
+    container-options:
+      - --net=host
     environment-variables:
       pass:
       - HCLOUD_MULTI_ARCH_TOKEN
