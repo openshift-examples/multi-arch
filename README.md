@@ -3,48 +3,46 @@
 ## Build container image (amd64/x86_64)
 
 ```bash
-[root@centos-amd64 multi-arch]# buildah bud -f Containerfile \
-    -t quay.io/openshift-examples/multi-arch:kcdmunich2023-$(uname -m) .
-
+[root@x86-instance multi-arch]# buildah bud -f Containerfile \
+    -t quay.io/openshift-examples/multi-arch:demo-$(uname -m) .
 STEP 1/2: FROM registry.access.redhat.com/ubi9/ubi-micro AS runner
 Trying to pull registry.access.redhat.com/ubi9/ubi-micro:latest...
 Getting image source signatures
 Checking if image destination supports signatures
-Copying blob 940034fae708 done
-Copying config 995a64c3e9 done
+Copying blob 9e167103aefa done
+Copying config 1b9d4f56fb done
 Writing manifest to image destination
 Storing signatures
 STEP 2/2: CMD ["uname","-om" ]
-COMMIT quay.io/openshift-examples/multi-arch:kcdmunich2023-x86_64
+COMMIT quay.io/openshift-examples/multi-arch:demo-x86_64
 Getting image source signatures
-Copying blob e54dc53d0edb skipped: already exists
+Copying blob a3ede86005c1 skipped: already exists
 Copying blob 5f70bf18a086 done
-Copying config f89495e3e0 done
+Copying config 81b91103bc done
 Writing manifest to image destination
-Storing signatures
---> f89495e3e0be
-Successfully tagged quay.io/openshift-examples/multi-arch:kcdmunich2023-x86_64
-f89495e3e0be655cdd4abc0048fbd3974658e9c07296ff4cdcf5e4e3226edc41
+--> 81b91103bcad
+Successfully tagged quay.io/openshift-examples/multi-arch:demo-x86_64
+81b91103bcad946edabad074db3e3eefcbfccd307587b6b40257bb0932a31705
 ```
 
 List images (not pushed, yet)
 ```
-[root@centos-amd64 multi-arch]# podman images --digests --no-trunc
-REPOSITORY                                 TAG                   DIGEST                                                                   IMAGE ID                                                                 CREATED         SIZE
-quay.io/openshift-examples/multi-arch      kcdmunich2023-x86_64  sha256:d9b46d23c9f8f39b3ec5c1422038d19f4f2604df7d5ec24dce62ef3841c581e3  sha256:f89495e3e0be655cdd4abc0048fbd3974658e9c07296ff4cdcf5e4e3226edc41  48 seconds ago  26.1 MB
-registry.access.redhat.com/ubi9/ubi-micro  latest                sha256:57ac8525717f02853b992b0fab41752d4120e5d85163acd8ab696c8a94a715b5  sha256:995a64c3e9344d8de878be45556a32ef243a141cc02e8daa71debb1bf926545e  4 weeks ago     26.1 MB
+[root@x86-instance multi-arch]# podman images --digests --no-trunc
+REPOSITORY                                 TAG          DIGEST                                                                   IMAGE ID                                                                 CREATED         SIZE
+quay.io/openshift-examples/multi-arch      demo-x86_64  sha256:66ade3f15bca773a0227d4ff479bb1191b5e5bb94da88bab7307284129bb1733  sha256:81b91103bcad946edabad074db3e3eefcbfccd307587b6b40257bb0932a31705  28 seconds ago  26.1 MB
+registry.access.redhat.com/ubi9/ubi-micro  latest       sha256:bd93cff066cc579e49d53f50782f7edad319031e9d511b1e8709cf16be8d78a0  sha256:1b9d4f56fb2cd4401fa14437e3f245e6872388ed3e50f72926234315cbf4f817  3 weeks ago     26.1 MB
 ```
 
 <details>
-  <summary>Discover image details - Manifest (`sha256:d9b46d23c9f8`)</summary>
+  <summary>Discover image details - Manifest (`sha256:66ade3f15bca`)</summary>
 
-### Discover image details - Manifest (`sha256:d9b46d23c9f8`)
+### Discover image details - Manifest (`sha256:66ade3f15bca`)
 
 ```bash
 # Get Digest
-[root@centos-amd64 multi-arch]# skopeo inspect --raw containers-storage:quay.io/openshift-examples/multi-arch:kcdmunich2023-x86_64  | sha256sum
+[root@x86-instance multi-arch]# skopeo inspect --raw containers-storage:quay.io/openshift-examples/multi-arch:demo-$(uname -m) | sha256sum
 INFO[0000] Not using native diff for overlay, this may cause degraded performance for building images: kernel has CONFIG_OVERLAY_FS_REDIRECT_DIR enabled
-d9b46d23c9f8f39b3ec5c1422038d19f4f2604df7d5ec24dce62ef3841c581e3  -
+66ade3f15bca773a0227d4ff479bb1191b5e5bb94da88bab7307284129bb1733  -
 ```
 
 ```json
@@ -52,42 +50,226 @@ d9b46d23c9f8f39b3ec5c1422038d19f4f2604df7d5ec24dce62ef3841c581e3  -
   "schemaVersion": 2,
   "mediaType": "application/vnd.oci.image.manifest.v1+json",
   "config": {
-	"mediaType": "application/vnd.oci.image.config.v1+json",
-	"digest": "sha256:f89495e3e0be655cdd4abc0048fbd3974658e9c07296ff4cdcf5e4e3226edc41",
-	"size": 4236
+    "mediaType": "application/vnd.oci.image.config.v1+json",
+    "digest": "sha256:81b91103bcad946edabad074db3e3eefcbfccd307587b6b40257bb0932a31705",
+    "size": 4245
   },
   "layers": [
-	{
-  		"mediaType": "application/vnd.oci.image.layer.v1.tar",
-  		"digest": "sha256:e54dc53d0edbbc96d3307fdea7bc1ed433d9083a1aab033dc3b38fd8b4fb165a",
-  		"size": 26090496
-	},
-	{
-  		"mediaType": "application/vnd.oci.image.layer.v1.tar",
-  		"digest": "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
-  		"size": 1024
-	}
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar",
+      "digest": "sha256:a3ede86005c19f841273a0c4b8ee64628a029794025b7274cb8cbd4c9d2c6e11",
+      "size": 26085888
+    },
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar",
+      "digest": "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+      "size": 1024
+    }
   ],
   "annotations": {
-	"org.opencontainers.image.base.digest": "sha256:18a01cb5c53560ca2295e8a218454fe33b330ad6fac0d0ea43a513cd93787b7f",
-	"org.opencontainers.image.base.name": "registry.access.redhat.com/ubi9/ubi-micro:latest"
+    "org.opencontainers.image.base.digest": "sha256:a54f5a7a9b67f32b6ae402cf0659ba4a3fd8eed4bdcbd00b5514ce4450b31214",
+    "org.opencontainers.image.base.name": "registry.access.redhat.com/ubi9/ubi-micro:latest"
   }
 }
 ```
 </details>
 
 <details>
-  <summary>Discover image details - Config (`sha256:f89495e3e0be`)</summary>
+  <summary>Discover image details - Config (`sha256:81b91103bcad`)</summary>
 
-### Discover image details - Config (`sha256:f89495e3e0be`)
+### Discover image details - Config (`sha256:81b91103bcad`)
 
 ```bash
 # Get ImageID
-skopeo inspect --raw  containers-storage:quay.io/openshift-examples/multi-arch:kcdmunich2023-x86_64   | jq '.config.digest'
+[root@x86-instance multi-arch]# skopeo inspect --raw  containers-storage:quay.io/openshift-examples/multi-arch:demo-$(uname -m)   | jq '.config.digest'
 INFO[0000] Not using native diff for overlay, this may cause degraded performance for building images: kernel has CONFIG_OVERLAY_FS_REDIRECT_DIR enabled
-"sha256:f89495e3e0be655cdd4abc0048fbd3974658e9c07296ff4cdcf5e4e3226edc41"
+"sha256:81b91103bcad946edabad074db3e3eefcbfccd307587b6b40257bb0932a31705"
+[root@x86-instance multi-arch]#
 ```
 
+`skopeo inspect --config containers-storage:quay.io/openshift-examples/multi-arch:demo-$(uname -m)`:
+```json
+{
+  "created": "2023-10-01T19:27:45.860244628Z",
+  "architecture": "amd64",
+  "os": "linux",
+  "config": {
+    "Env": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    ],
+    "Cmd": [
+      "uname",
+      "-om"
+    ],
+    "Labels": {
+	[...snipped...]
+    }
+  },
+  "rootfs": {
+    "type": "layers",
+    "diff_ids": [
+      "sha256:a3ede86005c19f841273a0c4b8ee64628a029794025b7274cb8cbd4c9d2c6e11",
+      "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+    ]
+  }
+  "history": [
+	[...snipped...]
+  ]
+}
+```
+</details>
+
+## Push container image (amd64/x86_64)
+
+```
+[root@x86-instance multi-arch]# podman push quay.io/openshift-examples/multi-arch:demo-$(uname -m)
+Getting image source signatures
+Copying blob 5f70bf18a086 done   |
+Copying blob a3ede86005c1 done   |
+Copying config 81b91103bc done   |
+Writing manifest to image destination
+```
+
+![quay-76535c50cab1-hl.png](assets/quay-76535c50cab1-hl.png)
+
+
+## 😱 Different digest
+
+
+```bash
+# Get Manifest from local image
+[root@x86-instance multi-arch]# skopeo inspect --raw containers-storage:quay.io/openshift-examples/multi-arch:demo-$(uname -m) > 66ade3f15bca.json
+INFO[0000] Not using native diff for overlay, this may cause degraded performance for building images: kernel has CONFIG_OVERLAY_FS_REDIRECT_DIR enabled
+
+# Get Manifest from image in container registry
+[root@x86-instance multi-arch]# skopeo inspect --raw docker://quay.io/openshift-examples/multi-arch:demo-$(uname -m) > 76535c50cab1.json
+
+# Double check sha256sum
+[root@x86-instance multi-arch]# sha256sum *json
+66ade3f15bca773a0227d4ff479bb1191b5e5bb94da88bab7307284129bb1733  66ade3f15bca.json
+76535c50cab1708ff17dc67e93d2a06dea01978f7201d17fd6b28b32f8ce9555  76535c50cab1.json
+
+# "Cleanup" json
+[root@x86-instance multi-arch]# jq . 66ade3f15bca.json > 66ade3f15bca.pretty.json
+[root@x86-instance multi-arch]# jq . 76535c50cab1.json > 76535c50cab1.pretty.json
+
+# Diff
+[root@x86-instance multi-arch]# diff -Nuar 66ade3f15bca.pretty.json 76535c50cab1.pretty.json
+```
+```diff
+--- 66ade3f15bca.pretty.json	2023-10-01 19:41:38.331150221 +0000
++++ 76535c50cab1.pretty.json	2023-10-01 19:41:46.923176546 +0000
+@@ -8,14 +8,14 @@
+   },
+   "layers": [
+     {
+-      "mediaType": "application/vnd.oci.image.layer.v1.tar",
+-      "digest": "sha256:a3ede86005c19f841273a0c4b8ee64628a029794025b7274cb8cbd4c9d2c6e11",
+-      "size": 26085888
++      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
++      "digest": "sha256:9e167103aefa56af4c39359687f54fdd263ca85bc946e770d92c054df7ada57c",
++      "size": 7686605
+     },
+     {
+-      "mediaType": "application/vnd.oci.image.layer.v1.tar",
+-      "digest": "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+-      "size": 1024
++      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
++      "digest": "sha256:bd9ddc54bea929a22b334e73e026d4136e5b73f5cc29942896c72e4ece69b13d",
++      "size": 34
+     }
+   ],
+   "annotations": {
+```
+
+## Build and Push container image (arm64/aarch64)
+
+
+```bash
+[root@arm-instance multi-arch]# buildah bud -f Containerfile \
+    -t quay.io/openshift-examples/multi-arch:demo-$(uname -m) .
+STEP 1/2: FROM registry.access.redhat.com/ubi9/ubi-micro AS runner
+Trying to pull registry.access.redhat.com/ubi9/ubi-micro:latest...
+Getting image source signatures
+Checking if image destination supports signatures
+Copying blob 76f837f08b76 done
+Copying config 97f43b6789 done
+Writing manifest to image destination
+Storing signatures
+STEP 2/2: CMD ["uname","-om" ]
+COMMIT quay.io/openshift-examples/multi-arch:demo-aarch64
+Getting image source signatures
+Copying blob 791a6a33d694 skipped: already exists
+Copying blob 5f70bf18a086 done
+Copying config 01d89888b7 done
+Writing manifest to image destination
+--> 01d89888b7ef
+Successfully tagged quay.io/openshift-examples/multi-arch:demo-aarch64
+01d89888b7ef4cb7709345dd8f5f9a9ee352007a613f2b41fed11571f6f53a95
+```
+
+List images (not pushed, yet)
+```
+[root@arm-instance multi-arch]# podman images --digests --no-trunc
+REPOSITORY                                 TAG           DIGEST                                                                   IMAGE ID                                                                 CREATED         SIZE
+quay.io/openshift-examples/multi-arch      demo-aarch64  sha256:c3bb20ed9d0466c9234763764baab5b5ffd7bd87e5ca2459c889c5ddbe411fbe  sha256:01d89888b7ef4cb7709345dd8f5f9a9ee352007a613f2b41fed11571f6f53a95  31 seconds ago  27.3 MB
+registry.access.redhat.com/ubi9/ubi-micro  latest        sha256:bd93cff066cc579e49d53f50782f7edad319031e9d511b1e8709cf16be8d78a0  sha256:97f43b6789e0162674e5fe274a3b39d4894062b4ec8e5b0c4f9305f43223c797  2 weeks ago     27.3 MB
+```
+
+<details>
+  <summary>Discover image details - Manifest (`sha256:c3bb20ed9d04`)</summary>
+
+### Discover image details - Manifest (`sha256:c3bb20ed9d04`)
+
+```bash
+# Get Digest
+[root@arm-instance multi-arch]# skopeo inspect --raw containers-storage:quay.io/openshift-examples/multi-arch:demo-$(uname -m) | sha256sum
+INFO[0000] Not using native diff for overlay, this may cause degraded performance for building images: kernel has CONFIG_OVERLAY_FS_REDIRECT_DIR enabled
+c3bb20ed9d0466c9234763764baab5b5ffd7bd87e5ca2459c889c5ddbe411fbe  -
+```
+
+```json
+{
+  "schemaVersion": 2,
+  "mediaType": "application/vnd.oci.image.manifest.v1+json",
+  "config": {
+    "mediaType": "application/vnd.oci.image.config.v1+json",
+    "digest": "sha256:01d89888b7ef4cb7709345dd8f5f9a9ee352007a613f2b41fed11571f6f53a95",
+    "size": 4247
+  },
+  "layers": [
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar",
+      "digest": "sha256:791a6a33d694bf7f1a8a1373b17e2cead2c0e2ee17620cd64128acfa88d2a953",
+      "size": 27290112
+    },
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar",
+      "digest": "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+      "size": 1024
+    }
+  ],
+  "annotations": {
+    "org.opencontainers.image.base.digest": "sha256:937f8e16fda9d9d2dceaa03870bf40d355ef68eea8faa04cd56cd59d6d33866a",
+    "org.opencontainers.image.base.name": "registry.access.redhat.com/ubi9/ubi-micro:latest"
+  }
+}
+```
+</details>
+
+<details>
+  <summary>Discover image details - Config (`sha256:01d89888b7ef`)</summary>
+
+### Discover image details - Config (`sha256:01d89888b7ef`)
+
+```bash
+# Get ImageID
+[root@arm-instance multi-arch]# skopeo inspect --raw  containers-storage:quay.io/openshift-examples/multi-arch:demo-$(uname -m)   | jq '.config.digest'
+INFO[0000] Not using native diff for overlay, this may cause degraded performance for building images: kernel has CONFIG_OVERLAY_FS_REDIRECT_DIR enabled
+"sha256:01d89888b7ef4cb7709345dd8f5f9a9ee352007a613f2b41fed11571f6f53a95"
+```
+
+`skopeo inspect --config containers-storage:quay.io/openshift-examples/multi-arch:demo-$(uname -m)`:
 ```json
 {
   "created": "2023-07-14T11:49:23.062774594Z",
@@ -119,16 +301,15 @@ INFO[0000] Not using native diff for overlay, this may cause degraded performanc
 ## Push container image (amd64/x86_64)
 
 ```
-[root@centos-amd64 multi-arch]# podman push quay.io/openshift-examples/multi-arch:kcdmunich2023-x86_64
+[root@arm-instance ~]# podman push quay.io/openshift-examples/multi-arch:demo-$(uname -m)
 Getting image source signatures
-Copying blob 5f70bf18a086 done
-Copying blob e54dc53d0edb done
-Copying config f89495e3e0 done
+Copying blob 791a6a33d694 done   |
+Copying blob 5f70bf18a086 done   |
+Copying config 01d89888b7 done   |
 Writing manifest to image destination
-Storing signatures
 ```
 
-![quay-d3b7a48ede60.png](assets/quay-d3b7a48ede60.png)
+![quay-4eab20bcf7da-hl.png](assets/quay-4eab20bcf7da-hl.png)
 
 
 ## 😱 Different digest
@@ -136,37 +317,37 @@ Storing signatures
 
 ```bash
 # Get Manifest from local image
-[root@centos-amd64 overlay]# skopeo inspect --raw containers-storage:quay.io/openshift-examples/multi-arch:kcdmunich2023-x86_64 > d9b46d23c9f8.json
+[root@arm-instance ~]# skopeo inspect --raw containers-storage:quay.io/openshift-examples/multi-arch:demo-$(uname -m) > c3bb20ed9d04.json
 INFO[0000] Not using native diff for overlay, this may cause degraded performance for building images: kernel has CONFIG_OVERLAY_FS_REDIRECT_DIR enabled
 
 # Get Manifest from image in container registry
-[root@centos-amd64 overlay]# skopeo inspect --raw docker://quay.io/openshift-examples/multi-arch:kcdmunich2023-x86_64 > d3b7a48ede60.json
+[root@arm-instance overlay]# skopeo inspect --raw docker://quay.io/openshift-examples/multi-arch:demo-$(uname -m) > 4eab20bcf7da.json
 
 # Double check sha256sum
-[root@centos-amd64 overlay]# sha256sum *json
-d3b7a48ede6086835f0b97a82f9baaaa2d566072aec7e209d4341eb29566fafb  d3b7a48ede60.json
-d9b46d23c9f8f39b3ec5c1422038d19f4f2604df7d5ec24dce62ef3841c581e3  d9b46d23c9f8.json
+[root@arm-instance ~]# sha256sum *json
+4eab20bcf7da10905cb95ce80141869e84854d15d99454e1365f10286d519f62  4eab20bcf7da.json
+c3bb20ed9d0466c9234763764baab5b5ffd7bd87e5ca2459c889c5ddbe411fbe  c3bb20ed9d04.json
 
 # "Cleanup" json
-[root@centos-amd64 overlay]# jq . d3b7a48ede60.json > d3b7a48ede60.pretty.json
-[root@centos-amd64 overlay]# jq . d9b46d23c9f8.json > d9b46d23c9f8.pretty.json
+[root@arm-instance ~]# jq . 4eab20bcf7da.json > 4eab20bcf7da.pretty.json
+[root@arm-instance ~]# jq . c3bb20ed9d04.json > c3bb20ed9d04.pretty.json
 
 # Diff
-[root@centos-amd64 overlay]# diff -Nuar d3b7a48ede60.pretty.json d9b46d23c9f8.pretty.json
+[root@arm-instance ~]# diff -Nuar 4eab20bcf7da.pretty.json c3bb20ed9d04.pretty.json
 ```
 ```diff
---- d3b7a48ede60.pretty.json    2023-07-14 12:16:39.650417761 +0000
-+++ d9b46d23c9f8.pretty.json    2023-07-14 12:15:38.543467132 +0000
+--- 4eab20bcf7da.pretty.json	2023-10-01 19:22:19.243175721 +0000
++++ c3bb20ed9d04.pretty.json	2023-10-01 19:22:33.857304565 +0000
 @@ -8,14 +8,14 @@
    },
    "layers": [
      {
 -      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
--      "digest": "sha256:940034fae708a1fe0ee6ff6929fffd48c235a6da185812ea4b31bab58815b6cf",
--      "size": 7676536
+-      "digest": "sha256:76f837f08b7667f5c10d53f91ca4885797a2cfa13f195e9bd024ad9ad934d0d2",
+-      "size": 7099212
 +      "mediaType": "application/vnd.oci.image.layer.v1.tar",
-+      "digest": "sha256:e54dc53d0edbbc96d3307fdea7bc1ed433d9083a1aab033dc3b38fd8b4fb165a",
-+      "size": 26090496
++      "digest": "sha256:791a6a33d694bf7f1a8a1373b17e2cead2c0e2ee17620cd64128acfa88d2a953",
++      "size": 27290112
      },
      {
 -      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
@@ -180,95 +361,92 @@ d9b46d23c9f8f39b3ec5c1422038d19f4f2604df7d5ec24dce62ef3841c581e3  d9b46d23c9f8.j
    "annotations": {
 ```
 
+## Create multi-arch image / fat-manifest
 
-## Build and Push container image (arm64/aarch64)
-
-
-```bash
-# Build
-[root@centos-arm64 multi-arch]# buildah bud -t quay.io/openshift-examples/multi-arch:kcdmunich2023-$(uname -m) .
-STEP 1/2: FROM registry.access.redhat.com/ubi9/ubi-micro AS runner
-Trying to pull registry.access.redhat.com/ubi9/ubi-micro:latest...
-Getting image source signatures
-Checking if image destination supports signatures
-Copying blob 5c3f8435842b done
-Copying config e2742eb12e done
-Writing manifest to image destination
-Storing signatures
-STEP 2/2: CMD ["uname","-om" ]
-COMMIT quay.io/openshift-examples/multi-arch:kcdmunich2023-aarch64
-Getting image source signatures
-Copying blob 9eda08853b4a skipped: already exists
-Copying blob 5f70bf18a086 skipped: already exists
-Copying config 05447a1ff2 done
-Writing manifest to image destination
-Storing signatures
---> 05447a1ff2eb
-Successfully tagged quay.io/openshift-examples/multi-arch:kcdmunich2023-aarch64
-05447a1ff2eb966612bfbebd8f78f61ae7d0ffba09ce4dd9b4aaf8f384a75f21
-
-# Push
-[root@centos-arm64 multi-arch]# buildah push quay.io/openshift-examples/multi-arch:kcdmunich2023-$(uname -m)
-Getting image source signatures
-Copying blob 9eda08853b4a done
-Copying blob bd9ddc54bea9 skipped: already exists
-Copying config 05447a1ff2 done
-Writing manifest to image destination
-Storing signatures
 ```
-
-
-## Create Multi-Arch image
-
-```bash
-[root@centos-amd64 multi-arch]# podman manifest create manifestlist/v1
-74fab59072d748f3a8bdb88d3248d4372f8c21440732038de7b4e88888373b3f
-
-[root@centos-amd64 multi-arch]# buildah manifest add manifestlist/v1 quay.io/openshift-examples/multi-arch:kcdmunich2023-aarch64
-74fab59072d748f3a8bdb88d3248d4372f8c21440732038de7b4e88888373b3f: sha256:b2be25b1c8344d0f6a028a9b50d2e42ba25451c2d19fef3635dbd131d005bbf4
-
-[root@centos-amd64 multi-arch]# buildah manifest add manifestlist/v1 quay.io/openshift-examples/multi-arch:kcdmunich2023-x86_64
-74fab59072d748f3a8bdb88d3248d4372f8c21440732038de7b4e88888373b3f: sha256:d3b7a48ede6086835f0b97a82f9baaaa2d566072aec7e209d4341eb29566fafb
-
-[root@centos-amd64 multi-arch]# buildah manifest push manifestlist/v1 docker://quay.io/openshift-examples/multi-arch:kcdmunich2023
+[root@x86-instance multi-arch]# podman manifest create localhost/demo
+0deab136998a9b9143d5b253b1b6e8a6d741cfeb5fd9641379a4317ec117bc38
+[root@x86-instance multi-arch]# podman manifest add localhost/demo quay.io/openshift-examples/multi-arch:demo-x86_64
+0deab136998a9b9143d5b253b1b6e8a6d741cfeb5fd9641379a4317ec117bc38
+[root@x86-instance multi-arch]# podman manifest add localhost/demo quay.io/openshift-examples/multi-arch:demo-aarch64
+0deab136998a9b9143d5b253b1b6e8a6d741cfeb5fd9641379a4317ec117bc38
+[root@x86-instance multi-arch]# podman manifest push localhost/demo quay.io/openshift-examples/multi-arch:demo
 Getting image list signatures
-Copying 0 of 2 images in list
+Copying 2 images generated from 2 images in list
+Copying image sha256:76535c50cab1708ff17dc67e93d2a06dea01978f7201d17fd6b28b32f8ce9555 (1/2)
+Getting image source signatures
+Copying blob 9e167103aefa skipped: already exists
+Copying blob bd9ddc54bea9 skipped: already exists
+Copying config 81b91103bc done   |
+Writing manifest to image destination
+Copying image sha256:4eab20bcf7da10905cb95ce80141869e84854d15d99454e1365f10286d519f62 (2/2)
+Getting image source signatures
+Copying blob bd9ddc54bea9 skipped: already exists
+Copying blob 76f837f08b76 skipped: already exists
+Copying config 01d89888b7 done   |
+Writing manifest to image destination
 Writing manifest list to image destination
 Storing list signatures
+[root@x86-instance multi-arch]# podman images --digests --no-trunc
+REPOSITORY                                 TAG          DIGEST                                                                   IMAGE ID                                                                 CREATED         SIZE
+localhost/demo                             latest       sha256:20b959ad5960230b65a77b746bdbf5d991ade4d7a129c2554e167acdcc990531  sha256:0deab136998a9b9143d5b253b1b6e8a6d741cfeb5fd9641379a4317ec117bc38  6 minutes ago   833 B
+quay.io/openshift-examples/multi-arch      demo-x86_64  sha256:66ade3f15bca773a0227d4ff479bb1191b5e5bb94da88bab7307284129bb1733  sha256:81b91103bcad946edabad074db3e3eefcbfccd307587b6b40257bb0932a31705  24 minutes ago  26.1 MB
+registry.access.redhat.com/ubi9/ubi-micro  latest       sha256:bd93cff066cc579e49d53f50782f7edad319031e9d511b1e8709cf16be8d78a0  sha256:1b9d4f56fb2cd4401fa14437e3f245e6872388ed3e50f72926234315cbf4f817  3 weeks ago     26.1 MB
 
-[root@centos-amd64 multi-arch]# buildah manifest rm manifestlist/v1
-untagged: localhost/manifestlist/v1:latest
-74fab59072d748f3a8bdb88d3248d4372f8c21440732038de7b4e88888373b3f
-
-# Inspect
-[root@centos-amd64-run multi-arch]# skopeo inspect --raw   docker://quay.io/openshift-examples/multi-arch:kcdmunich2023 | jq
 ```
-```json
-{
-  "schemaVersion": 2,
-  "mediaType": "application/vnd.oci.image.index.v1+json",
-  "manifests": [
-    {
-      "mediaType": "application/vnd.oci.image.manifest.v1+json",
-      "digest": "sha256:b2be25b1c8344d0f6a028a9b50d2e42ba25451c2d19fef3635dbd131d005bbf4",
-      "size": 776,
-      "platform": {
-        "architecture": "arm64",
-        "os": "linux"
-      }
+
+<details>
+  <summary>Question: How to predict the Image ID (`6270f63fbb1c`) of the manifest?</summary>
+
+Red Hat internal slack #forum-container-engines: https://redhat-internal.slack.com/archives/CBBJY9GSX/p1696249069114529
+
+```
+[root@x86-instance storage]# podman manifest create localhost/demo2
+6270f63fbb1c4ae4b18c82936f5be0c6523e77455a2565ee48013807b813a08c
+[root@x86-instance storage]# podman images --digests --no-trunc
+REPOSITORY                                 TAG          DIGEST                                                                   IMAGE ID                                                                 CREATED         SIZE
+localhost/demo2                            latest       sha256:20b959ad5960230b65a77b746bdbf5d991ade4d7a129c2554e167acdcc990531  sha256:6270f63fbb1c4ae4b18c82936f5be0c6523e77455a2565ee48013807b813a08c  20 seconds ago  110 B
+[root@x86-instance storage]# cat ./overlay-images/6270f63fbb1c4ae4b18c82936f5be0c6523e77455a2565ee48013807b813a08c/manifest
+{"schemaVersion":2,"mediaType":"application/vnd.docker.distribution.manifest.list.v2+json","manifests":null}[root@x86-instance storage]# cat ./overlay-images/6270f63fbb1c4ae4b18c82936f5be0c6523e77455a2565ee48013807b813a08c/manifest | sha256sum
+20b959ad5960230b65a77b746bdbf5d991ade4d7a129c2554e167acdcc990531  -
+[root@x86-instance storage]# pwd
+/var/lib/containers/storage
+[root@x86-instance storage]# cat overlay-images/images.json  | jq
+..
+  {
+    "id": "6270f63fbb1c4ae4b18c82936f5be0c6523e77455a2565ee48013807b813a08c",
+    "digest": "sha256:20b959ad5960230b65a77b746bdbf5d991ade4d7a129c2554e167acdcc990531",
+    "names": [
+      "localhost/demo2:latest"
+    ],
+    "big-data-names": [
+      "manifest",
+      "instances.json"
+    ],
+    "big-data-sizes": {
+      "instances.json": 2,
+      "manifest": 108
     },
-    {
-      "mediaType": "application/vnd.oci.image.manifest.v1+json",
-      "digest": "sha256:d3b7a48ede6086835f0b97a82f9baaaa2d566072aec7e209d4341eb29566fafb",
-      "size": 776,
-      "platform": {
-        "architecture": "amd64",
-        "os": "linux"
-      }
-    }
-  ]
-}
+    "big-data-digests": {
+      "instances.json": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "manifest": "sha256:20b959ad5960230b65a77b746bdbf5d991ade4d7a129c2554e167acdcc990531"
+    },
+    "created": "2023-10-01T20:03:26.300473396Z"
+  }
+
+..
+
+
+[root@x86-instance storage]# find | grep 6270
+./overlay-images/6270f63fbb1c4ae4b18c82936f5be0c6523e77455a2565ee48013807b813a08c
+./overlay-images/6270f63fbb1c4ae4b18c82936f5be0c6523e77455a2565ee48013807b813a08c/manifest
+./overlay-images/6270f63fbb1c4ae4b18c82936f5be0c6523e77455a2565ee48013807b813a08c/instances.json
+
+
 ```
+
+</details>
+
 
 ## Discover via quay.io web ui
 
@@ -290,13 +468,25 @@ Deploy a registry, for example:
 Copy image into registry:
 
 ```bash
-export REGISTRY=default-registry.apps.cluster-kptrj.kptrj.sandbox275.opentlc.com
+export REGISTRY=registry-multi-arch-demo.apps....
 
 skopeo copy --all \
-  docker://quay.io/openshift-examples/multi-arch:kcdmunich2023 \
-  docker://${REGISTRY}/openshift-examples/multi-arch:kcdmunich202
+  docker://quay.io/openshift-examples/multi-arch:demo \
+  docker://${REGISTRY}/openshift-examples/multi-arch:demo
 
+# Optional - just the tags, blobs already copied.
+skopeo copy --all \
+  docker://quay.io/openshift-examples/multi-arch:demo-x86_64 \
+  docker://${REGISTRY}/openshift-examples/multi-arch:demo-x86_64
+skopeo copy --all \
+  docker://quay.io/openshift-examples/multi-arch:demo-aarch64 \
+  docker://${REGISTRY}/openshift-examples/multi-arch:demo-aarch64
 
+```
+
+Optional, set registry read-only:
+```bash =""
+oc patch deployment/registry -p '{"spec":{"template":{"spec":{"containers":[{"name":"registry","env":[{"name":"REGISTRY_STORAGE_MAINTENANCE_READONLY","value":"{\"enabled\":true}"}]}]}}}}'
 ```
 
 ### Take a look into the registry
@@ -306,14 +496,14 @@ skopeo copy --all \
 For example, double check the sha256 change
 
 ```bash
-sh-4.4# pwd
-/registry/docker/registry/v2/blobs/sha256/94/940034fae708a1fe0ee6ff6929fffd48c235a6da185812ea4b31bab58815b6cf
+sh-4.4# cd /registry/docker/registry/v2/blobs/sha256/76/76f837f08b7667f5c10d53f91ca4885797a2cfa13f195e9bd024ad9ad934d0d2/
 sh-4.4# file *
-data: gzip compressed data, original size 26090496
+data: gzip compressed data, original size 27290112
+
 sh-4.4# cp data foo.gz
 sh-4.4# gzip -d foo.gz
 sh-4.4# sha256sum *
-940034fae708a1fe0ee6ff6929fffd48c235a6da185812ea4b31bab58815b6cf  data
-e54dc53d0edbbc96d3307fdea7bc1ed433d9083a1aab033dc3b38fd8b4fb165a  foo
+76f837f08b7667f5c10d53f91ca4885797a2cfa13f195e9bd024ad9ad934d0d2  data
+791a6a33d694bf7f1a8a1373b17e2cead2c0e2ee17620cd64128acfa88d2a953  foo
 sh-4.4#
 ```
