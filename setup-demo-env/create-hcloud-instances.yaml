@@ -75,7 +75,7 @@
   hosts: hcloud
   gather_facts: no
   tasks:
-
+      # sudo dnf install podman skopeo buildah jq git tmux
     - name: Install packages
       ansible.builtin.dnf:
         name:
@@ -84,8 +84,9 @@
           - buildah
           - jq
           - git
+          - tmux
         state: latest
-
+      # git clone https://github.com/openshift-examples/multi-arch.git
     - name: Clone demo repo
       ansible.builtin.git:
         repo: https://github.com/openshift-examples/multi-arch.git
