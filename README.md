@@ -507,3 +507,13 @@ sh-4.4# sha256sum *
 791a6a33d694bf7f1a8a1373b17e2cead2c0e2ee17620cd64128acfa88d2a953  foo
 sh-4.4#
 ```
+
+## Multi-arch build with Podman Desktop or on Fedora Linux
+
+```bash
+export IMAGE='quay.io/openshift-examples/multi-arch:podman-desktop-example'
+podman build --platform linux/amd64,linux/arm64  --manifest ${IMAGE}  .
+podman manifest inspect ${IMAGE}
+podman manifest push ${IMAGE}
+skopeo inspect --raw docker://${IMAGE} | jq
+```
