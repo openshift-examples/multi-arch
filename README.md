@@ -508,7 +508,9 @@ sh-4.4# sha256sum *
 sh-4.4#
 ```
 
-## Multi-arch build with Podman Desktop or on Fedora Linux
+## Multi-arch build 
+
+### via Podman Desktop or on Fedora Linux
 
 ```bash
 export IMAGE='quay.io/openshift-examples/multi-arch:podman-desktop-example'
@@ -516,4 +518,45 @@ podman build --platform linux/amd64,linux/arm64  --manifest ${IMAGE}  .
 podman manifest inspect ${IMAGE}
 podman manifest push ${IMAGE}
 skopeo inspect --raw docker://${IMAGE} | jq
+```
+
+### via GitHub Actions
+
+Example: https://github.com/rbo/antora-viewer
+
+```yaml
+jobs:
+  cicd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: set datetime
+        run: |
+          echo "datetime=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+      - name: Install qemu dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+      - name: build image
+        id: build-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ github.repository }}
+          tags: latest ${{ github.ref_name }}
+          platforms: linux/amd64, linux/arm64
+          context: ./container
+          containerfiles: |
+            ./container/Containerfile
+          build-args: |
+            CREATED_AT=${{ env.datetime }}
+            GITHUB_SHA=${{ github.sha }}
+      - name: push image to ghcr.io
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: ${{ steps.build-image.outputs.tags }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 ```
