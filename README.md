@@ -491,6 +491,9 @@ oc patch deployment/registry -p '{"spec":{"template":{"spec":{"containers":[{"na
 
 ### Take a look into the registry
 
+[![alt text](https://img.youtube.com/vi/v_v1OhRcOZU/0.jpg)](https://www.youtube.com/watch?v=v_v1OhRcOZU)
+
+
 `oc rsh -c tools deployment/registry`:
 
 For example, double check the sha256 change
